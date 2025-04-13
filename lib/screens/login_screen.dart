@@ -1,70 +1,246 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../services/auth_service.dart';
-import 'home_screen.dart';
-import 'register_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:tugas_absen/screens/register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  bool isLoading = false;
-
-  void loginUser() async {
-    setState(() => isLoading = true);
-
-    final success = await AuthService.login(
-      emailController.text,
-      passwordController.text,
-    );
-
-    setState(() => isLoading = false);
-
-    if (success) {
-      Get.offAll(() => const HomeScreen());
-    } else {
-      Get.snackbar("Login Gagal", "Email atau password salah");
-    }
-  }
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: "Email"),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: "Password"),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                  onPressed: loginUser,
-                  child: const Text("Login"),
+      backgroundColor: const Color(0xFF8656D6), // Warna latar belakang ungu
+      body: Stack(
+        children: [
+          // Blur Circle di pojok kanan atas
+          Positioned(
+            top: -40,
+            right: -40,
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    Color.fromARGB(120, 255, 255, 255),
+                    Color.fromARGB(30, 255, 255, 255),
+                    Colors.transparent,
+                  ],
+                  stops: [0.0, 0.6, 1.0],
+                  radius: 0.8,
                 ),
-            TextButton(
-              onPressed: () => Get.to(() => const SignUpScreen()),
-              child: const Text("Belum punya akun? Daftar di sini"),
+              ),
             ),
-          ],
-        ),
+          ),
+
+          // Konten halaman Sign In
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 16,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(Icons.arrow_back_ios, color: Colors.white),
+                      Row(
+                        children: [
+                          const Text(
+                            "Don't have an account?",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          const SizedBox(width: 18),
+                          OutlinedButton(
+                            onPressed: () {
+                              Get.toNamed('/signup');
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.white),
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text("Sign Up"),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                const Center(
+                  child: Text(
+                    "Sign In",
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 35),
+                SizedBox(
+                  height: 590,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: (MediaQuery.of(context).size.width - 345) / 2,
+                        child: Container(
+                          width: 350,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFC2A0F0),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Bagian Putih
+                      Container(
+                        margin: const EdgeInsets.only(top: 15),
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(30),
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 32,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 24),
+                            const Text(
+                              "Welcome back",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              "Sign in to continue.",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 98, 98, 98),
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Form
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: "Email Address",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            TextField(
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                labelText: "Password",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Button Sign In
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Get.offNamed('/home');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF8E2DE2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Sign In",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 36),
+
+                            // Divider dan Sosmed
+                            Row(
+                              children: const [
+                                Expanded(child: Divider()),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: Text("or sign in with"),
+                                ),
+                                Expanded(child: Divider()),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.g_mobiledata,
+                                    size: 40,
+                                  ),
+                                  label: const Text(
+                                    "Sign in with Google",
+                                    style: TextStyle(
+                                      fontSize: 15, // Ukuran teks
+                                      fontWeight: FontWeight.w600, // Tebal font
+                                      letterSpacing: 0.5, // Jarak antar huruf
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black87,
+                                    side: const BorderSide(color: Colors.grey),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    minimumSize: const Size(340, 50),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

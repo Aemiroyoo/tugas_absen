@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tugas_absen/screens/home_screen.dart';
+import 'package:tugas_absen/screens/register_screen.dart';
 import 'screens/login_screen.dart';
+// import 'screens/sign_up_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +17,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'App Absensi',
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      initialRoute: '/signup',
+      getPages: [
+        GetPage(name: '/signup', page: () => const SignUpScreen()),
+        GetPage(name: '/login', page: () => const SignInScreen()),
+        GetPage(name: '/home', page: () => const HomeScreen()),
+      ],
     );
   }
 }
