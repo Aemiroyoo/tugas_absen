@@ -45,7 +45,10 @@ class AuthService {
     try {
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode({'email': email, 'password': password}),
       );
       print('RESPON LOGIN: ${response.body}');
@@ -70,6 +73,68 @@ class AuthService {
       }
     } catch (e) {
       return {'success': false, 'message': 'Terjadi kesalahan: $e'};
+    }
+  }
+
+  // // GET PROFILE
+  static Future<Map<String, dynamic>?> getProfile() async {
+    final url = Uri.parse('$baseUrl/profile');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return body['data'];
+      } else {
+        print('Gagal ambil profil: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Error ambil profil: $e');
+      return null;
+    }
+  }
+
+  // // UPDATE PROFILE
+  static Future<bool> updateProfile(String name, String email) async {
+    final url = Uri.parse('$baseUrl/profile');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    try {
+      print('Nama: $name, Email: $email'); // Debugging output
+      final response = await http.put(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'name': name, 'email': email}),
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return true;
+      } else {
+        print('Gagal update profil: ${response.body}');
+        // Tampilkan seluruh response body untuk debugging
+        final body = jsonDecode(response.body);
+        print('Detail error: ${body['errors']}');
+        return false;
+      }
+    } catch (e) {
+      print('Error update profil: $e');
+      return false;
     }
   }
 

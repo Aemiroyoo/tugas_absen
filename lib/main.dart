@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tugas_absen/screens/edit_profile_screen.dart';
 import 'package:tugas_absen/screens/home_screen.dart';
 import 'package:tugas_absen/screens/history_screen.dart';
 import 'package:tugas_absen/screens/profile_screen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/signup', page: () => const SignUpScreen()),
         GetPage(name: '/login', page: () => const SignInScreen()),
         GetPage(name: '/home', page: () => const MainScreen()),
+        GetPage(name: '/edit-profile', page: () => const EditProfileScreen()),
       ],
     );
   }

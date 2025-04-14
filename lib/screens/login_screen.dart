@@ -106,7 +106,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(Icons.arrow_back_ios, color: Colors.white),
+                      const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                        size: 17,
+                      ),
                       Row(
                         children: [
                           const Text(

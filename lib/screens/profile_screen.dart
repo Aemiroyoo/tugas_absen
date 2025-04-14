@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tugas_absen/screens/edit_profile_screen.dart';
 import 'package:tugas_absen/services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -10,21 +12,28 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String? name;
-  String? email;
+  String? userName;
+  String? userEmail;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    loadUserData();
+    fetchProfile();
   }
 
-  Future<void> loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      name = prefs.getString('userName') ?? 'Nama Lengkap';
-      email = prefs.getString('userEmail') ?? 'email@example.com';
-    });
+  Future<void> fetchProfile() async {
+    final data = await AuthService.getProfile();
+    if (data != null) {
+      setState(() {
+        userName = data['name'];
+        userEmail = data['email'];
+        isLoading = false;
+      });
+    } else {
+      setState(() => isLoading = false);
+      // Bisa kasih feedback error di sini juga
+    }
   }
 
   @override
@@ -83,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(height: 20),
 
                         Text(
-                          name ?? '',
+                          userName ?? '',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 22,
@@ -92,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          email ?? '',
+                          userEmail ?? '',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
@@ -104,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Navigasi ke Edit Profile
+                            Get.to(() => const EditProfileScreen());
                           },
                           icon: const Icon(Icons.edit, color: Colors.white),
                           label: const Text(

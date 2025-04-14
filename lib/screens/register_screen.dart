@@ -54,19 +54,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     vertical: 16,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Icon(Icons.arrow_back_ios, color: Colors.white),
+                      // const Icon(
+                      //   Icons.arrow_back_ios,
+                      //   color: Colors.white,
+                      //   size: 17,
+                      // ),
                       Row(
                         children: [
                           const Text(
                             "already have an account?",
                             style: TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255),
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                           ),
-                          const SizedBox(width: 18),
+                          const SizedBox(width: 10),
                           OutlinedButton(
                             onPressed: () {
                               Get.toNamed('/login');
