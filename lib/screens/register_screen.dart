@@ -1,15 +1,26 @@
-import 'dart:ui';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:tugas_absen/screens/login_screen.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tugas_absen/services/auth_service.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool isLoading = false; // Untuk menampilkan indikator loading
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF8656D6), // Gradasi ungu dari atas
+      backgroundColor: const Color(0xFF8656D6),
       body: Stack(
         children: [
           // Blur Circle di pojok kanan atas
@@ -37,7 +48,6 @@ class SignUpScreen extends StatelessWidget {
             bottom: false,
             child: Column(
               children: [
-                // Bagian Atas
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 30.0,
@@ -76,29 +86,27 @@ class SignUpScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const Spacer(),
-                const Center(
+                Center(
                   child: Text(
                     "Sign Up",
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 35),
                 SizedBox(
                   height: 590,
                   child: Stack(
                     children: [
                       Positioned(
-                        top: 0, // naik 20 pixel ke atas
-                        left:
-                            (MediaQuery.of(context).size.width - 345) /
-                            2, // biar center
+                        top: 0,
+                        left: (MediaQuery.of(context).size.width - 345) / 2,
                         child: Container(
                           width: 350,
                           height: 65,
@@ -111,7 +119,6 @@ class SignUpScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Bagian Putih
                       Container(
                         margin: const EdgeInsets.only(top: 15),
                         width: double.infinity,
@@ -129,11 +136,13 @@ class SignUpScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const SizedBox(height: 17),
-                            const Text(
+                            Text(
                               "Get started free",
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -145,9 +154,9 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 27),
-
-                            // Form
+                            // Form fields
                             TextField(
+                              controller: nameController,
                               decoration: InputDecoration(
                                 labelText: "Your name",
                                 border: OutlineInputBorder(
@@ -156,8 +165,8 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 16),
-
                             TextField(
+                              controller: emailController,
                               decoration: InputDecoration(
                                 labelText: "Email Address",
                                 border: OutlineInputBorder(
@@ -167,6 +176,7 @@ class SignUpScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             TextField(
+                              controller: passwordController,
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: "Password",
@@ -176,32 +186,54 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 24),
-
                             // Button Sign Up
                             SizedBox(
                               width: double.infinity,
                               height: 50,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  // Fungsi Sign Up
-                                },
+                                onPressed:
+                                    isLoading
+                                        ? null
+                                        : () async {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          bool success =
+                                              await AuthService.register(
+                                                nameController.text,
+                                                emailController.text,
+                                                passwordController.text,
+                                              );
+                                          if (success) {
+                                            Get.offAllNamed(
+                                              '/login',
+                                            ); // Redirect ke home
+                                          }
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF9848FF),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                child: const Text(
-                                  "Sign Up",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                child:
+                                    isLoading
+                                        ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                        : const Text(
+                                          "Sign Up",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                               ),
                             ),
                             const SizedBox(height: 16),
-
                             // Divider dan Sosmed
                             Row(
                               children: const [
@@ -225,15 +257,16 @@ class SignUpScreen extends StatelessWidget {
                                     Icons.g_mobiledata,
                                     size: 40,
                                   ),
-                                  label: const Text(
+                                  label: Text(
                                     "Sign in with Google",
-                                    style: TextStyle(
-                                      fontSize: 15, // Ukuran teks
-                                      fontWeight: FontWeight.w600, // Tebal font
-                                      letterSpacing: 0.5, // Jarak antar huruf
-                                      color:
-                                          Colors
-                                              .black87, // Warna teks (opsional karena udah ada foregroundColor)
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        fontSize: 15, // Ukuran teks
+                                        fontWeight:
+                                            FontWeight.w600, // Tebal font
+                                        letterSpacing: 0.5, // Jarak antar huruf
+                                        color: Colors.black87,
+                                      ),
                                     ),
                                   ),
                                   style: ElevatedButton.styleFrom(

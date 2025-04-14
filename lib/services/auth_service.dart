@@ -17,8 +17,8 @@ class AuthService {
     try {
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'name': name, 'email': email, 'password': password}),
+        headers: {'Accept': 'application/json'},
+        body: {'name': name, 'email': email, 'password': password},
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -36,7 +36,10 @@ class AuthService {
   }
 
   // LOGIN
-  static Future<bool> login(String email, String password) async {
+  static Future<Map<String, dynamic>> login(
+    String email,
+    String password,
+  ) async {
     final url = Uri.parse('$baseUrl/login');
 
     try {
@@ -45,24 +48,28 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
+      print('RESPON LOGIN: ${response.body}');
+
+      final body = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final token = data['token'];
+        final token = body['data']['token'];
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token); // Simpan token
+        await prefs.setString('token', token);
+        await prefs.setString('userName', body['data']['user']['name']);
+        await prefs.setString('userEmail', body['data']['user']['email']);
 
-        Get.snackbar('Berhasil', 'Login berhasil!');
-        return true;
+        return {
+          'success': true,
+          'message': body['message'],
+          'user': body['data']['user'], // kalau butuh user info juga
+        };
       } else {
-        final body = jsonDecode(response.body);
-        Get.snackbar('Gagal', body['message'] ?? 'Login gagal');
-        return false;
+        return {'success': false, 'message': body['message'] ?? 'Login gagal'};
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
-      return false;
+      return {'success': false, 'message': 'Terjadi kesalahan: $e'};
     }
   }
 
@@ -70,7 +77,11 @@ class AuthService {
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
+    await prefs.remove('userName'); // tambahkan ini
+    await prefs.remove('userEmail'); // dan ini
+
     Get.snackbar('Keluar', 'Kamu telah logout.');
+    Get.offAllNamed('/login'); // Navigasi ke halaman login
   }
 
   // CEK LOGIN STATUS
