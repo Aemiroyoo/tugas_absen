@@ -29,8 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
       Get.snackbar(
         'Peringatan',
         'Email dan password tidak boleh kosong!',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
+        backgroundColor: const Color.fromARGB(92, 255, 0, 0),
+        colorText: const Color.fromARGB(255, 255, 255, 255),
         snackPosition: SnackPosition.BOTTOM,
       );
       return;

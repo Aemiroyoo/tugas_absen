@@ -74,14 +74,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       prefs.setString('userEmail', emailController.text);
 
       // Tampilkan Snackbar jika berhasil
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profil berhasil diperbarui')),
+      Get.snackbar(
+        'Berhasil',
+        'Profil berhasil diperbarui.',
+        backgroundColor: const Color.fromARGB(72, 255, 255, 255),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
       );
 
-      // Kembali ke MainScreen
+      // Kembali ke MainScreen dan beri tahu bahwa halaman perlu di-refresh
       Navigator.pop(
         context,
-      ); // Menutup EditProfileScreen dan kembali ke MainScreen
+        true,
+      ); // Mengirimkan nilai `true` untuk menandakan refresh
     } else {
       // Tampilkan error atau snackbar jika gagal update
       ScaffoldMessenger.of(

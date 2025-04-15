@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../../services/attendance_service.dart'; // ganti sesuai path kamu
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
+
+  String formatDate(String? dateTimeStr) {
+    if (dateTimeStr == null) return '-';
+    final dateTime = DateTime.parse(dateTimeStr);
+    return DateFormat('dd MMM yyyy • HH:mm').format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,31 +41,70 @@ class HistoryScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Placeholder Data History
+            // Container list
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 ),
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: 5, // nanti ganti dengan data dari API
-                  itemBuilder: (context, index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 2,
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.calendar_today,
-                          color: Colors.deepPurple,
-                        ),
-                        title: Text('Check In: 08:00 - Check Out: 17:00'),
-                        subtitle: Text('Tanggal: 2025-04-${10 + index}'),
-                      ),
+                child: FutureBuilder<List<dynamic>?>(
+                  future: AttendanceService.getHistory(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError ||
+                        snapshot.data == null ||
+                        snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text("Belum ada riwayat absensi."),
+                      );
+                    }
+
+                    final historyList = snapshot.data!;
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: historyList.length,
+                      itemBuilder: (context, index) {
+                        final item = historyList[index];
+                        final checkIn = item['check_in'];
+                        final checkOut = item['check_out'];
+                        final alamat =
+                            item['check_in_address'] ??
+                            'Alamat tidak diketahui';
+
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.calendar_today,
+                              color: Colors.deepPurple,
+                            ),
+                            title: Text(
+                              "Check In: ${formatDate(checkIn)}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Alamat: $alamat"),
+                                Text(
+                                  "Check Out: ${checkOut != null ? formatDate(checkOut) : 'Belum checkout'}",
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

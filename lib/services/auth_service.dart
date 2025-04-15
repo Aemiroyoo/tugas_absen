@@ -47,9 +47,10 @@ class AuthService {
         url,
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
         },
-        body: jsonEncode({'email': email, 'password': password}),
+        body: {'email': email, 'password': password},
+        // body: jsonEncode({'email': email, 'password': password}),
       );
       print('RESPON LOGIN: ${response.body}');
 
@@ -76,7 +77,7 @@ class AuthService {
     }
   }
 
-  // // GET PROFILE
+  // GET PROFILE
   static Future<Map<String, dynamic>?> getProfile() async {
     final url = Uri.parse('$baseUrl/profile');
     final prefs = await SharedPreferences.getInstance();

@@ -112,23 +112,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(height: 30),
 
                         ElevatedButton.icon(
-                          onPressed: () {
-                            Get.to(() => const EditProfileScreen());
+                          onPressed: () async {
+                            // Navigasi ke EditProfileScreen dan tunggu hasilnya
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const EditProfileScreen(),
+                              ),
+                            );
+
+                            // Cek apakah perlu refresh data
+                            if (result == true) {
+                              fetchProfile(); // panggil ulang untuk ambil data baru
+                            }
                           },
-                          icon: const Icon(Icons.edit, color: Colors.white),
+                          icon: const Icon(Icons.edit),
                           label: const Text(
-                            'Edit Profile',
+                            'Edit Profil',
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepPurple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                         ),
 

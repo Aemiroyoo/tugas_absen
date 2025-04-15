@@ -12,30 +12,39 @@ class AttendanceService {
   }
 
   // ✅ Check-In
-  static Future<bool> checkIn(double lat, double lng) async {
-    final token = await _getToken();
-    final url = Uri.parse('$baseUrl/absen-masuk');
+  static Future<bool> checkIn(double lat, double lng, String address) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final url = Uri.parse('$baseUrl/absen/check-in');
 
     try {
-      final res = await http.post(
+      final response = await http.post(
         url,
         headers: {
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
         },
-        body: jsonEncode({'latitude': lat, 'longitude': lng}),
+        body: {
+          'check_in_lat': lat.toString(),
+          'check_in_lng': lng.toString(),
+          'check_in_address': address,
+        },
       );
 
-      if (res.statusCode == 200) {
-        Get.snackbar("Check-in", "Berhasil!");
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        Get.snackbar('Sukses', data['message'] ?? 'Berhasil check-in');
         return true;
+      } else if (response.statusCode == 400) {
+        Get.snackbar('Info', data['message'] ?? 'Sudah check-in hari ini');
+        return false;
       } else {
-        final body = jsonDecode(res.body);
-        Get.snackbar("Check-in Gagal", body['message'] ?? 'Error');
+        Get.snackbar('Error', data['message'] ?? 'Gagal check-in');
         return false;
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar('Kesalahan', 'Terjadi kesalahan: $e');
       return false;
     }
   }
@@ -72,46 +81,52 @@ class AttendanceService {
   // ✅ Get Riwayat Absensi
   static Future<List<dynamic>?> getHistory() async {
     final token = await _getToken();
-    final url = Uri.parse('$baseUrl/history-absen');
+    final url = Uri.parse('$baseUrl/absen/history');
 
     try {
       final res = await http.get(
         url,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json', // 👈 Tambahan opsional
+        },
       );
 
+      print('RESPON HISTORY: ${res.body}'); // Debugging
       if (res.statusCode == 200) {
-        return jsonDecode(res.body)['data'];
+        final json = jsonDecode(res.body);
+        return json['data'] as List<dynamic>;
       } else {
-        Get.snackbar("Gagal", "Tidak dapat memuat riwayat");
+        final json = jsonDecode(res.body);
+        Get.snackbar("Gagal", json['message'] ?? "Tidak dapat memuat riwayat");
         return null;
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("Error", "Terjadi kesalahan: $e");
       return null;
     }
   }
 
   // ✅ Get Profile
-  static Future<Map<String, dynamic>?> getProfile() async {
-    final token = await _getToken();
-    final url = Uri.parse('$baseUrl/profile');
+  // static Future<Map<String, dynamic>?> getProfile() async {
+  //   final token = await _getToken();
+  //   final url = Uri.parse('$baseUrl/profile');
 
-    try {
-      final res = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer $token'},
-      );
+  //   try {
+  //     final res = await http.get(
+  //       url,
+  //       headers: {'Authorization': 'Bearer $token'},
+  //     );
 
-      if (res.statusCode == 200) {
-        return jsonDecode(res.body)['data'];
-      } else {
-        Get.snackbar("Gagal", "Tidak dapat memuat profil");
-        return null;
-      }
-    } catch (e) {
-      Get.snackbar("Error", e.toString());
-      return null;
-    }
-  }
+  //     if (res.statusCode == 200) {
+  //       return jsonDecode(res.body)['data'];
+  //     } else {
+  //       Get.snackbar("Gagal", "Tidak dapat memuat profil");
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", e.toString());
+  //     return null;
+  //   }
+  // }
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tugas_absen/screens/chekin_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -162,34 +164,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          width: 155,
-                          height: 125,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color.fromARGB(
-                                255,
-                                103,
-                                103,
-                                103,
-                              ), // Ganti sesuai warna border yang kamu inginkan
-                              width: 2,
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => const CheckInScreen());
+                          },
+                          child: Container(
+                            width: 155,
+                            height: 125,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(255, 103, 103, 103),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const CircleAvatar(
-                                radius: 30,
-                                backgroundColor: Colors.grey,
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Check In',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey,
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Check In',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Container(

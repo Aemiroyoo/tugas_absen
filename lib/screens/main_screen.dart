@@ -25,6 +25,16 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  // Fungsi untuk mendengarkan perubahan di halaman profil
+  void _onProfileUpdated(bool isUpdated) {
+    if (isUpdated) {
+      // Memanggil setState untuk merefresh halaman profil
+      setState(() {
+        // Memastikan halaman profil ter-refresh dengan data terbaru
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
