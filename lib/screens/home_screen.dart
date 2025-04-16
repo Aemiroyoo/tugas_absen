@@ -162,8 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 24),
                     // Tombol Check In & Check Out
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics:
+                          NeverScrollableScrollPhysics(), // biar ga bentrok sama scroll parent
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
                       children: [
                         GestureDetector(
                           onTap: () {
@@ -219,6 +224,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(height: 8),
                                 const Text(
                                   'Check Out',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // Get.to(() => const CheckOutScreen());
+                          },
+                          child: Container(
+                            width: 155,
+                            height: 125,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(255, 103, 103, 103),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey,
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Check In Izin',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ],

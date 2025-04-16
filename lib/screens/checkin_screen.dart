@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-import 'package:tugas_absen/services/attendance_service.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart'; // untuk menampilkan peta
+import 'package:geolocator/geolocator.dart'; // untuk mendapatkan lokasi pengguna
+import 'package:get/get.dart'; // untuk menampilkan snackbar
+import 'package:tugas_absen/services/attendance_service.dart'; // untuk mengirim data ke server
+import 'package:geocoding/geocoding.dart'; // untuk mendapatkan alamat dari koordinat
 
 class CheckInScreen extends StatefulWidget {
   const CheckInScreen({super.key});

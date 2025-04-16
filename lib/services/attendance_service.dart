@@ -85,6 +85,48 @@ class AttendanceService {
     }
   }
 
+  // ✅ Izin
+  static Future<bool> requestIzin(
+    double lat,
+    double lng,
+    String address,
+    String alasan,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final url = Uri.parse('$baseUrl/absen/check-in');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'check_in_lat': lat.toString(),
+          'check_in_lng': lng.toString(),
+          'check_in_address': address,
+          'status': 'izin',
+          'alasan_izin': alasan,
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        Get.snackbar('Sukses', data['message'] ?? 'Izin berhasil diajukan');
+        return true;
+      } else {
+        Get.snackbar('Gagal', data['message'] ?? 'Gagal mengajukan izin');
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Kesalahan', 'Terjadi kesalahan: $e');
+      return false;
+    }
+  }
+
   // ✅ Get Riwayat Absensi
   static Future<List<dynamic>?> getHistory() async {
     final token = await _getToken();
@@ -119,27 +161,4 @@ class AttendanceService {
       return [];
     }
   }
-
-  // ✅ Get Profile
-  // static Future<Map<String, dynamic>?> getProfile() async {
-  //   final token = await _getToken();
-  //   final url = Uri.parse('$baseUrl/profile');
-
-  //   try {
-  //     final res = await http.get(
-  //       url,
-  //       headers: {'Authorization': 'Bearer $token'},
-  //     );
-
-  //     if (res.statusCode == 200) {
-  //       return jsonDecode(res.body)['data'];
-  //     } else {
-  //       Get.snackbar("Gagal", "Tidak dapat memuat profil");
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //     return null;
-  //   }
-  // }
 }
