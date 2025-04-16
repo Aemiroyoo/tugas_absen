@@ -28,6 +28,7 @@ class AttendanceService {
           'check_in_lat': lat.toString(),
           'check_in_lng': lng.toString(),
           'check_in_address': address,
+          'status': 'masuk',
         },
       );
 
@@ -50,18 +51,24 @@ class AttendanceService {
   }
 
   // ✅ Check-Out
-  static Future<bool> checkOut(double lat, double lng) async {
+  static Future<bool> checkOut(double lat, double lng, String address) async {
     final token = await _getToken();
-    final url = Uri.parse('$baseUrl/absen-keluar');
+    final url = Uri.parse('$baseUrl/absen/check-out');
 
     try {
       final res = await http.post(
         url,
         headers: {
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
         },
-        body: jsonEncode({'latitude': lat, 'longitude': lng}),
+        body: {
+          'check_out_lat': lat.toString(),
+          'check_out_lng': lng.toString(),
+          'check_out_location': '$lat, $lng',
+          'check_out_address': address,
+        },
       );
 
       if (res.statusCode == 200) {
@@ -92,18 +99,24 @@ class AttendanceService {
         },
       );
 
-      print('RESPON HISTORY: ${res.body}'); // Debugging
+      print("RESPON HISTORY (${res.statusCode}): ${res.body}");
+      // Debugging
       if (res.statusCode == 200) {
-        final json = jsonDecode(res.body);
-        return json['data'] as List<dynamic>;
+        final body = jsonDecode(res.body);
+        if (body['data'] != null && body['data'] is List) {
+          return body['data'];
+        } else {
+          final msg = body['message'] ?? 'Data tidak tersedia.';
+          Get.snackbar("Gagal", msg);
+          return [];
+        }
       } else {
-        final json = jsonDecode(res.body);
-        Get.snackbar("Gagal", json['message'] ?? "Tidak dapat memuat riwayat");
-        return null;
+        Get.snackbar("Gagal", "Tidak dapat memuat riwayat (${res.statusCode})");
+        return [];
       }
     } catch (e) {
-      Get.snackbar("Error", "Terjadi kesalahan: $e");
-      return null;
+      Get.snackbar("Error", "Terjadi kesalahan: ${e.toString()}");
+      return [];
     }
   }
 
