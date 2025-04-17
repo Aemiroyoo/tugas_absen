@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tugas_absen/screens/checkin_screen.dart';
 import 'package:tugas_absen/screens/checkout_screen.dart';
+import 'package:tugas_absen/screens/permission_screen.dart';
+import 'package:tugas_absen/services/attendance_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +17,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Timer _timer;
   late DateTime _now;
+  String? userName = 'User';
+  String? checkInTime = '-- : --';
+  String? checkOutTime = '-- : --';
 
   @override
   void initState() {
@@ -24,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _now = DateTime.now();
       });
     });
+    _loadUserName();
+    _loadAbsenceTimes();
   }
 
   @override
@@ -39,6 +47,35 @@ class _HomeScreenState extends State<HomeScreen> {
     return '$hours H : $minutes M : $seconds S';
   }
 
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('name') ?? 'User';
+    });
+  }
+
+  Future<void> _loadAbsenceTimes() async {
+    final history = await AttendanceService.getHistory();
+
+    if (history != null && history.isNotEmpty) {
+      final today = DateTime.now();
+
+      final todayRecord = history.firstWhereOrNull((record) {
+        final recordDate = DateTime.parse(record['created_at']);
+        return recordDate.year == today.year &&
+            recordDate.month == today.month &&
+            recordDate.day == today.day;
+      });
+
+      if (todayRecord != null) {
+        setState(() {
+          checkInTime = todayRecord['check_in_time'] ?? '-- : --';
+          checkOutTime = todayRecord['check_out_time'] ?? '-- : --';
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 vertical: 16,
               ),
               child: Row(
-                children: const [
+                children: [
                   Text(
                     'Home Page',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -75,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    // Card utama
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -86,15 +122,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: const [
-                              CircleAvatar(
+                            children: [
+                              const CircleAvatar(
                                 radius: 20,
                                 backgroundColor: Colors.white,
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Text(
-                                'Hi, Lakuna :)',
-                                style: TextStyle(
+                                'Hi, $userName :)',
+                                style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -114,22 +150,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          // Waktu Check In & Check Out
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Column(
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Check In',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Chip(
-                                    label: Text('08 : 00'),
+                                    label: Text(checkInTime ?? '-- : --'),
                                     backgroundColor: Colors.white,
                                   ),
                                 ],
@@ -140,17 +175,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.white54,
                               ),
                               Column(
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Check Out',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Chip(
-                                    label: Text('15 : 00'),
+                                    label: Text(checkOutTime ?? '-- : --'),
                                     backgroundColor: Colors.white,
                                   ),
                                 ],
@@ -161,104 +196,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    // Tombol Check In & Check Out
                     GridView.count(
                       crossAxisCount: 2,
                       shrinkWrap: true,
-                      physics:
-                          NeverScrollableScrollPhysics(), // biar ga bentrok sama scroll parent
+                      physics: const NeverScrollableScrollPhysics(),
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            Get.to(() => const CheckInScreen());
-                          },
-                          child: Container(
-                            width: 155,
-                            height: 125,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 103, 103, 103),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey,
-                                ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  'Check In',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
+                          onTap: () => Get.to(() => const CheckInScreen()),
+                          child: buildMenuItem('Check In'),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Get.to(() => const CheckOutScreen());
-                          },
-                          child: Container(
-                            width: 155,
-                            height: 125,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 103, 103, 103),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey,
-                                ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  'Check Out',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
+                          onTap: () => Get.to(() => const CheckOutScreen()),
+                          child: buildMenuItem('Check Out'),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            // Get.to(() => const CheckOutScreen());
-                          },
-                          child: Container(
-                            width: 155,
-                            height: 125,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 103, 103, 103),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey,
-                                ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  'Check In Izin',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
+                          onTap: () => Get.to(() => const PermissionScreen()),
+                          child: buildMenuItem('Ajukan Izin'),
                         ),
                       ],
                     ),
@@ -268,6 +223,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildMenuItem(String title) {
+    return Container(
+      width: 155,
+      height: 125,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color.fromARGB(255, 103, 103, 103),
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircleAvatar(radius: 30, backgroundColor: Colors.grey),
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }
