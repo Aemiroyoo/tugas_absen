@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.grey,
+                            color: Color.fromARGB(255, 98, 98, 98),
                           ),
                         ),
 
@@ -126,7 +126,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fetchProfile(); // panggil ulang untuk ambil data baru
                             }
                           },
-                          icon: const Icon(Icons.edit),
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 18,
+                            color: Colors.white,
+                          ),
                           label: const Text(
                             'Edit Profil',
                             style: TextStyle(color: Colors.white),

@@ -108,7 +108,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text("Ajukan Izin", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -170,7 +170,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
               icon: const Icon(Icons.assignment_turned_in),
               label: const Text("Ajukan Izin"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   vertical: 14,
