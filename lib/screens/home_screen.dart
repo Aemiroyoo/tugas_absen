@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tugas_absen/screens/checkin_screen.dart';
 import 'package:tugas_absen/screens/checkout_screen.dart';
 import 'package:tugas_absen/screens/permission_screen.dart';
 import 'package:tugas_absen/services/attendance_service.dart';
+import 'package:tugas_absen/services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,10 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadUserName() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userName = prefs.getString('name') ?? 'User';
-    });
+    final data = await AuthService.getProfile();
+    if (data != null) {
+      setState(() {
+        userName = data['name'] ?? 'User';
+      });
+    } else {
+      setState(() {
+        userName = 'User';
+      });
+    }
   }
 
   Future<void> _loadAbsenceTimes() async {
@@ -69,10 +77,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (todayRecord != null) {
         setState(() {
-          checkInTime = todayRecord['check_in_time'] ?? '-- : --';
-          checkOutTime = todayRecord['check_out_time'] ?? '-- : --';
+          checkInTime = _formatTime(
+            todayRecord['check_in'],
+          ); // 🔥 ambil 'check_in'
+          checkOutTime = _formatTime(
+            todayRecord['check_out'],
+          ); // 🔥 ambil 'check_out'
         });
       }
+    }
+  }
+
+  String _formatTime(dynamic dateTimeString) {
+    if (dateTimeString == null) return '-- : --';
+    try {
+      final dt = DateTime.parse(dateTimeString);
+      final formatted = DateFormat('HH:mm').format(dt);
+      return formatted;
+    } catch (e) {
+      return '-- : --';
     }
   }
 
