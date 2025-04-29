@@ -239,75 +239,75 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             const SizedBox(height: 16),
                             // Divider dan Sosmed
-                            Row(
-                              children: const [
-                                Expanded(child: Divider()),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: Text("or sign up with"),
-                                ),
-                                Expanded(child: Divider()),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.g_mobiledata,
-                                    size: 40,
-                                  ),
-                                  label: Text(
-                                    "Sign in with Google",
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                        fontSize: 15, // Ukuran teks
-                                        fontWeight:
-                                            FontWeight.w600, // Tebal font
-                                        letterSpacing: 0.5, // Jarak antar huruf
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.black87,
-                                    side: const BorderSide(color: Colors.grey),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    minimumSize: const Size(
-                                      260,
-                                      50,
-                                    ), // ⬅️ Lebar: 250, Tinggi: 50
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.blueAccent,
-                                    side: const BorderSide(color: Colors.grey),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    minimumSize: const Size(
-                                      60,
-                                      50,
-                                    ), // ⬅️ Ukuran kotak (bisa disesuaikan)
-                                    padding:
-                                        EdgeInsets
-                                            .zero, // Untuk buang padding bawaan
-                                  ),
-                                  child: const Icon(Icons.facebook, size: 27),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: const [
+                            //     Expanded(child: Divider()),
+                            //     Padding(
+                            //       padding: EdgeInsets.symmetric(
+                            //         horizontal: 8.0,
+                            //       ),
+                            //       child: Text("or sign up with"),
+                            //     ),
+                            //     Expanded(child: Divider()),
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 16),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     ElevatedButton.icon(
+                            //       onPressed: () {},
+                            //       icon: const Icon(
+                            //         Icons.g_mobiledata,
+                            //         size: 40,
+                            //       ),
+                            //       label: Text(
+                            //         "Sign in with Google",
+                            //         style: GoogleFonts.poppins(
+                            //           textStyle: TextStyle(
+                            //             fontSize: 15, // Ukuran teks
+                            //             fontWeight:
+                            //                 FontWeight.w600, // Tebal font
+                            //             letterSpacing: 0.5, // Jarak antar huruf
+                            //             color: Colors.black87,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       style: ElevatedButton.styleFrom(
+                            //         backgroundColor: Colors.white,
+                            //         foregroundColor: Colors.black87,
+                            //         side: const BorderSide(color: Colors.grey),
+                            //         shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(10),
+                            //         ),
+                            //         minimumSize: const Size(
+                            //           260,
+                            //           50,
+                            //         ), // ⬅️ Lebar: 250, Tinggi: 50
+                            //       ),
+                            //     ),
+                            //     const SizedBox(width: 20),
+                            //     ElevatedButton(
+                            //       onPressed: () {},
+                            //       style: ElevatedButton.styleFrom(
+                            //         backgroundColor: Colors.white,
+                            //         foregroundColor: Colors.blueAccent,
+                            //         side: const BorderSide(color: Colors.grey),
+                            //         shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(10),
+                            //         ),
+                            //         minimumSize: const Size(
+                            //           60,
+                            //           50,
+                            //         ), // ⬅️ Ukuran kotak (bisa disesuaikan)
+                            //         padding:
+                            //             EdgeInsets
+                            //                 .zero, // Untuk buang padding bawaan
+                            //       ),
+                            //       child: const Icon(Icons.facebook, size: 27),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),

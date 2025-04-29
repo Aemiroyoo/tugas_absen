@@ -24,53 +24,118 @@ class HistoryScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            Padding(
+            // Header dengan desain yang lebih modern
+            Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: 24.0,
-                vertical: 16,
+                vertical: 20,
               ),
               child: Row(
-                children: const [
+                children: [
+                  const Icon(
+                    Icons.history_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  const SizedBox(width: 12),
                   Text(
                     'History Absensi',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(0, 2),
+                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
 
-            // Body putih
+            // Body putih dengan card yang lebih menarik
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xFFF8F9FF),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, -2),
+                    ),
+                  ],
                 ),
                 child: FutureBuilder<List<dynamic>?>(
                   future: AttendanceService.getHistory(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              color: const Color(0xFF8656D6),
+                              strokeWidth: 3,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "Memuat riwayat...",
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     }
 
                     if (snapshot.hasError ||
                         snapshot.data == null ||
                         snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text("Belum ada riwayat absensi."),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.history_toggle_off_rounded,
+                              size: 72,
+                              color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "Belum ada riwayat absensi",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Riwayat presensi Anda akan muncul di sini",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }
 
                     final historyList = snapshot.data!;
 
                     return ListView.builder(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                      physics: const BouncingScrollPhysics(),
                       itemCount: historyList.length,
                       itemBuilder: (context, index) {
                         final item = historyList[index];
@@ -80,114 +145,283 @@ class HistoryScreen extends StatelessWidget {
                             item['check_in_address'] ??
                             'Alamat tidak diketahui';
 
-                        return AnimatedContainer(
-                          duration: Duration(milliseconds: 400 + index * 100),
-                          curve: Curves.easeOut,
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: Card(
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // 📅 Tanggal
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.calendar_month_rounded,
-                                        color: Colors.deepPurple,
+                        // Ambil tanggal untuk header section
+                        final String dateHeader = formatDate(checkIn);
+
+                        // Show date header for first item or when date changes
+                        bool showDateHeader =
+                            index == 0 ||
+                            formatDate(historyList[index - 1]['check_in']) !=
+                                dateHeader;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Tampilkan tanggal sebagai header jika perlu
+                            if (showDateHeader)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 16,
+                                  bottom: 8,
+                                  left: 4,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
                                       ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        formatDate(checkIn),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
+                                      decoration: BoxDecoration(
+                                        color: Color(
+                                          0xFF8656D6,
+                                        ).withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  // ✅ CheckIn | ❌ CheckOut sejajar
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Row(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Icon(
-                                            Icons.login_rounded,
-                                            size: 18,
-                                            color: Colors.green,
+                                          Icon(
+                                            Icons.calendar_today_rounded,
+                                            size: 16,
+                                            color: Color(0xFF8656D6),
                                           ),
-                                          const SizedBox(width: 4),
+                                          const SizedBox(width: 6),
                                           Text(
-                                            checkIn != null
-                                                ? formatTime(checkIn)
-                                                : '-',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(width: 12),
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.logout_rounded,
-                                            size: 18,
-                                            color: Colors.red,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            checkOut != null
-                                                ? formatTime(checkOut)
-                                                : 'Belum Check Out',
+                                            dateHeader,
                                             style: TextStyle(
-                                              fontWeight: FontWeight.w600,
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 14,
-                                              color:
-                                                  checkOut == null
-                                                      ? Colors.orange
-                                                      : Colors.black,
+                                              color: Color(0xFF8656D6),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            // Card absensi
+                            AnimatedContainer(
+                              duration: Duration(
+                                milliseconds: 400 + index * 100,
+                              ),
+                              curve: Curves.easeOutQuint,
+                              margin: const EdgeInsets.only(bottom: 12),
+                              child: Card(
+                                elevation: 2,
+                                shadowColor: Colors.black26,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.white,
+                                        const Color(0xFFF0F2FF),
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  // 📍 Alamat di bawah sendiri
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on_rounded,
-                                        size: 18,
-                                        color: Colors.blue,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          alamat,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Color.fromARGB(205, 0, 0, 0),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Waktu check-in dan check-out
+                                        Row(
+                                          children: [
+                                            // Check in time dengan status pill
+                                            Expanded(
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 14,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green
+                                                      .withOpacity(0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color: Colors.green
+                                                        .withOpacity(0.2),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.login_rounded,
+                                                      size: 18,
+                                                      color: Colors.green,
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      checkIn != null
+                                                          ? formatTime(checkIn)
+                                                          : '-',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                        color: Colors.green,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            // Check out time dengan status pill
+                                            Expanded(
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 14,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      checkOut == null
+                                                          ? Colors.orange
+                                                              .withOpacity(0.1)
+                                                          : Colors.red
+                                                              .withOpacity(0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color:
+                                                        checkOut == null
+                                                            ? Colors.orange
+                                                                .withOpacity(
+                                                                  0.2,
+                                                                )
+                                                            : Colors.red
+                                                                .withOpacity(
+                                                                  0.2,
+                                                                ),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.logout_rounded,
+                                                      size: 18,
+                                                      color:
+                                                          checkOut == null
+                                                              ? Colors.orange
+                                                              : Colors.red,
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      checkOut != null
+                                                          ? formatTime(checkOut)
+                                                          : 'Belum',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                        color:
+                                                            checkOut == null
+                                                                ? Colors.orange
+                                                                : Colors.red,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+
+                                        const SizedBox(height: 14),
+
+                                        // Divider cantik
+                                        Container(
+                                          height: 1,
+                                          color: Colors.grey.withOpacity(0.15),
+                                        ),
+
+                                        const SizedBox(height: 14),
+
+                                        // Location with prettier design
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue.withOpacity(
+                                                  0.1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: const Icon(
+                                                Icons.location_on_rounded,
+                                                size: 18,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    'Lokasi',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    alamat,
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                      color: Color.fromARGB(
+                                                        205,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                      ),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.3,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         );
                       },
                     );

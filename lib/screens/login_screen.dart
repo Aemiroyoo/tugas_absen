@@ -104,13 +104,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     vertical: 16,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 17,
-                      ),
+                      // const Icon(
+                      //   Icons.arrow_back_ios,
+                      //   color: Colors.white,
+                      //   size: 17,
+                      // ),
                       Row(
                         children: [
                           const Text(
@@ -262,55 +262,55 @@ class _SignInScreenState extends State<SignInScreen> {
                                 const SizedBox(height: 36),
 
                                 // Divider dan Sosmed
-                                Row(
-                                  children: const [
-                                    Expanded(child: Divider()),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                      ),
-                                      child: Text("or sign in with"),
-                                    ),
-                                    Expanded(child: Divider()),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton.icon(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.g_mobiledata,
-                                        size: 40,
-                                      ),
-                                      label: const Text(
-                                        "Sign in with Google",
-                                        style: TextStyle(
-                                          fontSize: 15, // Ukuran teks
-                                          fontWeight:
-                                              FontWeight.w600, // Tebal font
-                                          letterSpacing:
-                                              0.5, // Jarak antar huruf
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        foregroundColor: Colors.black87,
-                                        side: const BorderSide(
-                                          color: Colors.grey,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        minimumSize: const Size(340, 50),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   children: const [
+                                //     Expanded(child: Divider()),
+                                //     Padding(
+                                //       padding: EdgeInsets.symmetric(
+                                //         horizontal: 8.0,
+                                //       ),
+                                //       child: Text("or sign in with"),
+                                //     ),
+                                //     Expanded(child: Divider()),
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 16),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   children: [
+                                //     ElevatedButton.icon(
+                                //       onPressed: () {},
+                                //       icon: const Icon(
+                                //         Icons.g_mobiledata,
+                                //         size: 40,
+                                //       ),
+                                //       label: const Text(
+                                //         "Sign in with Google",
+                                //         style: TextStyle(
+                                //           fontSize: 15, // Ukuran teks
+                                //           fontWeight:
+                                //               FontWeight.w600, // Tebal font
+                                //           letterSpacing:
+                                //               0.5, // Jarak antar huruf
+                                //           color: Colors.black87,
+                                //         ),
+                                //       ),
+                                //       style: ElevatedButton.styleFrom(
+                                //         backgroundColor: Colors.white,
+                                //         foregroundColor: Colors.black87,
+                                //         side: const BorderSide(
+                                //           color: Colors.grey,
+                                //         ),
+                                //         shape: RoundedRectangleBorder(
+                                //           borderRadius: BorderRadius.circular(
+                                //             10,
+                                //           ),
+                                //         ),
+                                //         minimumSize: const Size(340, 50),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
