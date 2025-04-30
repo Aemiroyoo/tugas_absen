@@ -129,18 +129,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       letterSpacing: 0.5,
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(
-                      Icons.notifications_none_rounded,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white.withOpacity(0.2),
+                  //     borderRadius: BorderRadius.circular(12),
+                  //   ),
+                  //   padding: const EdgeInsets.all(8),
+                  //   child: const Icon(
+                  //     Icons.notifications_none_rounded,
+                  //     color: Colors.white,
+                  //     size: 24,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -198,38 +198,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.1,
-                                              ),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: const CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            Icons.person,
-                                            color: Color(0xFF6A3DE8),
-                                            size: 26,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
+                                      // Container(
+                                      //   padding: const EdgeInsets.all(2),
+                                      //   decoration: BoxDecoration(
+                                      //     color: Colors.white,
+                                      //     shape: BoxShape.circle,
+                                      //     boxShadow: [
+                                      //       BoxShadow(
+                                      //         color: Colors.black.withOpacity(
+                                      //           0.1,
+                                      //         ),
+                                      //         blurRadius: 8,
+                                      //         offset: const Offset(0, 2),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      //   child: const CircleAvatar(
+                                      //     radius: 24,
+                                      //     backgroundColor: Colors.white,
+                                      //     child: Icon(
+                                      //       Icons.person,
+                                      //       color: Color(0xFF6A3DE8),
+                                      //       size: 26,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      const SizedBox(width: 35),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Hi, $userName :)',
+                                            'Hi, $userName ',
                                             style: const TextStyle(
                                               fontSize: 20,
                                               color: Colors.white,
@@ -541,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     const SizedBox(width: 12),
                                     const Text(
-                                      'Aktivitas Hari Ini',
+                                      "Today's Activity",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

@@ -275,7 +275,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Lokasi Anda",
+                            "Your Location",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -343,7 +343,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                isInsideArea ? "Lokasi Valid" : "Di Luar Area",
+                                isInsideArea
+                                    ? "Valid location"
+                                    : "Di Luar Area",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -356,7 +358,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 isInsideArea
-                                    ? "Anda berada dalam jangkauan area check-in"
+                                    ? "You are within the check-in area range"
                                     : "Anda berada di luar area check-in yang ditentukan",
                                 style: TextStyle(
                                   fontSize: 13,
@@ -410,7 +412,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                   ),
                                   const SizedBox(width: 12),
                                   Text(
-                                    "Check In Sekarang",
+                                    "Check In Now",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

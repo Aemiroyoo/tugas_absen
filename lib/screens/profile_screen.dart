@@ -54,11 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.person_rounded,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+                      // const Icon(
+                      //   Icons.person_rounded,
+                      //   color: Colors.white,
+                      //   size: 28,
+                      // ),
                       const SizedBox(width: 12),
                       Text(
                         'Profile',
@@ -266,7 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             const Text(
-                                              'Akun',
+                                              'Account',
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,

@@ -136,7 +136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Informasi Pribadi",
+                    "Personal Information",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -146,7 +146,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 20),
                   // Name field
                   const Text(
-                    "Nama Lengkap",
+                    "Full Name",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
@@ -157,7 +157,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextFormField(
                     controller: nameController,
                     decoration: InputDecoration(
-                      hintText: 'Masukkan nama lengkap',
+                      hintText: 'Enter your full name',
                       prefixIcon: const Icon(
                         Icons.person_outline,
                         color: Colors.deepPurple,
@@ -203,7 +203,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     readOnly: true,
                     controller: emailController,
                     decoration: InputDecoration(
-                      hintText: 'Email anda',
+                      hintText: 'Your email',
                       prefixIcon: const Icon(
                         Icons.email_outlined,
                         color: Colors.deepPurple,
@@ -264,7 +264,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         )
                         : const Text(
-                          "Simpan Perubahan",
+                          "Save Changes",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

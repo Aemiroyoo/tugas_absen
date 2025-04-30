@@ -32,14 +32,14 @@ class HistoryScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.history_rounded,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  // const Icon(
+                  //   Icons.history_rounded,
+                  //   color: Colors.white,
+                  //   size: 30,
+                  // ),
                   const SizedBox(width: 12),
                   Text(
-                    'History Absensi',
+                    'Attendance History',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 26,
@@ -86,7 +86,7 @@ class HistoryScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              "Memuat riwayat...",
+                              "Loading history...",
                               style: TextStyle(
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
@@ -142,8 +142,7 @@ class HistoryScreen extends StatelessWidget {
                         final checkIn = item['check_in'];
                         final checkOut = item['check_out'];
                         final alamat =
-                            item['check_in_address'] ??
-                            'Alamat tidak diketahui';
+                            item['check_in_address'] ?? 'Unknown Address';
 
                         // Ambil tanggal untuk header section
                         final String dateHeader = formatDate(checkIn);
@@ -328,7 +327,7 @@ class HistoryScreen extends StatelessWidget {
                                                     Text(
                                                       checkOut != null
                                                           ? formatTime(checkOut)
-                                                          : 'Belum',
+                                                          : 'Not yet',
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
